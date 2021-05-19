@@ -1,0 +1,42 @@
+version: '3'
+networks: 
+  laravel:
+services: 
+  nginx-backend:
+    image: nginx:stable-alpine
+    container_name: nginx-laravel
+    ports:
+      - "8080:80"
+    volumes:
+      - ./Backend/laravel:/var/www/laravel
+      - ./Backend/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+      - postgresql
+    networks:
+      - laravel
+  php:
+    image: php:7.4.9-fpm
+    container_name: php
+    volumes:
+      - ./Backend/laravel:/var/www/laravel
+    ports:
+      - "9000:9000"
+    networks:
+      - laravel
+  postgresql:
+    image: mdillon/postgis:10
+    container_name: postgresql
+    tty: true
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=1234
+    volumes:
+      - ./Backend/postgresql:/var/lib/postgresql/data
+    networks: 
+      - laravel
+    networks:
+      - laravel
+  
