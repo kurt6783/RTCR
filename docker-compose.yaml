@@ -16,7 +16,10 @@ services:
     networks:
       - laravel
   php:
-    image: php:7.4.9-fpm
+    # image: php:7.4.9-fpm
+    build:
+      context: .
+      dockerfile: ./Backend/Dockerfile
     container_name: php
     volumes:
       - ./Backend/laravel:/var/www/laravel
